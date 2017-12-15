@@ -1,5 +1,5 @@
 (defproject dvlopt/mcp342x
-            "0.0.0-alpha0"
+            "0.0.0-alpha1"
 
   :description "A/D with MCP342x converters via I²C"
   :url         "https://github.com/dvlopt/mcp342x.clj"
