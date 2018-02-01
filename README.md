@@ -46,7 +46,7 @@ Using [Icare](https://github.com/dvlopt/icare) :
                 (adc/to-config {:channel 2
                                 :mode    :continuous
                                 :bits    16
-                                :pga     4}))
+                                :pga     1}))
 
 
 ;; now we can read it and interpret the result
@@ -64,13 +64,13 @@ Using [Icare](https://github.com/dvlopt/icare) :
 ;;     :channel    2
 ;;     :mode       :continuous
 ;;     :bits       16
-;;     :pga        4
+;;     :pga        1
 ;;     :micro-volt 913000}
 ```
 
 ## License
 
-Copyright © 2017 Adam Helinski
+Copyright © 2017-2018 Adam Helinski
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
