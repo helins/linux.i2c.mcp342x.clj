@@ -198,7 +198,7 @@
  
    (bit-or (config-flag :ready?
                         ready?)
-           (config-flag :channels
+           (config-flag :channel
                         channel)
            (config-flag :mode
                         mode)
