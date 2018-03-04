@@ -1,10 +1,10 @@
-# MCP342x
+# dvlopt.mcp342x
 
 [![Clojars
-Project](https://img.shields.io/clojars/v/dvlopt/mcp342x.svg)](https://clojars.org/dvlopt/mcp342x)
+Project](https://img.shields.io/clojars/v/dvlopt/i2c.mcp342x.svg)](https://clojars.org/dvlopt/i2c.mcp342x)
 
-Clojure utilities for talking to MCP342x A/D converter via
-[I²C](https://en.wikipedia.org/wiki/I%C2%B2C) :
+Clojure library for talking to the MCP342x family of A/D converters using
+[I2C](https://en.wikipedia.org/wiki/I%C2%B2C) :
 
 - MCP3421
 - MCP3422
@@ -15,57 +15,56 @@ Clojure utilities for talking to MCP342x A/D converter via
 - MCP3427
 - MCP3428
 
-This library provides functions for configuring and understanding those chips.
 
-For using I²C itself, from clojure, we recommend
-[Icare](https://github.com/dvlopt/icare).
+For using I2C itself from clojure we recommend
+[dvlopt.i2c](https://github.com/dvlopt/i2c).
 
 ## Usage
 
-Read the full [API](https://dvlopt.github.io/doc/mcp342x.clj/index.html).
+Read the [API](https://dvlopt.github.io/doc/dvlopt/i2c.mcp342x/).
 
-Using [Icare](https://github.com/dvlopt/icare) :
+Using [dvlopt.i2c](https://github.com/dvlopt/i2c) (without error checking) :
 
 ```clj
-(require '[icare.core :as i2c]
-         '[mcp342x    :as adc])
+(require '[dvlopt.i2c         :as i2c]
+         '[dvlopt.i2c.mcp342x :as adc])
 
 
-;; first, we need to open the I²C bus we need
+;; First, we need to open the I2C bus we need
 (def bus
-     (i2c/open "/dev/i2c-1"))
+     (::i2c/bus (i2c/open "/dev/i2c-1")))
 
 
-;; then select our ADC slave
+;; Then we select our ADC slave device
 (i2c/select bus
             (adc/address))
 
 
-;; let's configure our ADC in case we don't like the default settings
+;; Let's configure our ADC in case we don't like the default settings
 (i2c/write-byte bus
-                (adc/to-config {:channel 2
-                                :mode    :continuous
-                                :bits    16
-                                :pga     1}))
+                (adc/parameters->byte {::adc/channel    2
+                                       ::adc/mode       :continuous
+                                       ::adc/pga        :x1
+                                       ::adc/resolution :16-bits}))
 
 
-;; now we can read it and interpret the result
-(def buffer
-     (byte-array 3))
+;; Now we can read the converter and process the data
+(def buff
+     (adc/data-buffer :16-bits))
 
 
 (i2c/read-bytes bus
-                buffer)
+                buff)
 
 
-(adc/from-read buffer)
+(adc/process buff)
 
-;; => {:ready?     false
-;;     :channel    2
-;;     :mode       :continuous
-;;     :bits       16
-;;     :pga        1
-;;     :micro-volt 913000}
+;; => {::adc/channel     2
+;;     ::adc/converting? false
+;;     ::adc/mode        :continuous
+;;     ::adc/micro-volt  913000
+;;     ::adc/pga         1
+;;     ::adc/resolution  16}
 ```
 
 ## License

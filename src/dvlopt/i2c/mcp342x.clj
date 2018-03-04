@@ -9,22 +9,22 @@
      ::channel
        Up to 4 channels are available depending on the model.
 
-     ::mode
-       In :continuous mode, the converter measures the input voltage constantly whereas in
-       :one-shot mode, the measure only happens when the master writes a configuration byte
-       with ::ready? set to true.
-
      ::converting?
        When writing the configuration byte, this parameter must be set to true for initiating
        a new measure in :one-shot mode. It does not matter in :continuous mode.
        When reading the input voltage, the converter sets this parameter to false when a new
        conversion is ready.
 
-     ::resolution
-       Number of bits the input voltage is represented by, depending on the model.
+     ::mode
+       In :continuous mode, the converter measures the input voltage constantly whereas in
+       :one-shot mode, the measure only happens when the master writes a configuration byte
+       with ::converting? set to true.
 
      ::pga
-       Programamble Gain Amplifier."
+       Programamble Gain Amplifier.
+
+     ::resolution
+       Number of bits the input voltage is represented by, depending on the model."
 
   {:author "Adam Helinski"}
 
