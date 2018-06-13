@@ -22,9 +22,11 @@
 
      ::pga
        Programamble Gain Amplifier.
+       #{:x1 :x2 :x4 :x8}
 
      ::resolution
        Number of bits the input voltage is represented by, depending on the model.
+       #{:12-bit :14-bit :16-bit :18-bit}
   
 
    IO operations will throw in case of failure and are performed using this library :

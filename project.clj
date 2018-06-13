@@ -1,5 +1,5 @@
 (defproject dvlopt/linux.i2c.mcp342x
-            "1.0.0-beta0"
+            "1.0.0-beta1"
 
   :description  "Talk to the MCP342x family of ADC via I2C"
   :url          "https://github.com/dvlopt/linux.i2c.mcp342x"
