@@ -10,8 +10,8 @@
             [clojure.test.check.properties   :as tprop]
             [clojure.test                    :as t]
             [criterium.core                  :as ct]
-            [dvlopt.i2c                      :as i2c]
-            [dvlopt.i2c.mcp342x              :as adc]
+            [dvlopt.linux.i2c                :as i2c]
+            [dvlopt.linux.i2c.mcp342x        :as adc]
             [dvlopt.void                     :as void]))
 
 
