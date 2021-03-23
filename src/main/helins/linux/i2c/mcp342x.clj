@@ -12,25 +12,25 @@
   
    Parameters used throughout this library are :
 
-     ::channel
+     :mcp342x/channel
        Up to 4 channels, from 1 to 4, are available depending on the model.
 
-     ::converting?
+     :mcp342x/converting?
        When writing the configuration byte, this parameter must be set to true for initiating
        a new measure in :one-shot mode. It does not matter in :continuous mode.
        When reading the input voltage, the converter sets this parameter to false when a new
        conversion is ready.
 
-     ::mode
+     :mcp342x/mode
        In :continuous mode, the converter measures the input voltage constantly whereas in
        :one-shot mode, the measure only happens when the master writes a configuration byte
-       with ::converting? set to true.
+       with :mcp342x/converting? set to true.
 
-     ::pga
+     :mcp342x/pga
        Programamble Gain Amplifier.
        #{:x1 :x2 :x4 :x8}
 
-     ::resolution
+     :mcp342x/resolution
        Number of bits the input voltage is represented by, depending on the model.
        #{:12-bit :14-bit :16-bit :18-bit}
   
@@ -47,17 +47,15 @@
 ;;;;;;;;;; Misc
 
 
-(def defaults
+(def default+
 
   "Default values for this namespace."
 
-  {::channel     1
-   ::converting? true
-   ::mode        :continuous
-   ::pga         :x1
-   ::resolution  :12-bit})
-
-
+  {:mcp342x/channel     1
+   :mcp342x/converting? true
+   :mcp342x/mode        :continuous
+   :mcp342x/pga         :x1
+   :mcp342x/resolution  :12-bit})
 
 
 ;;;;;;;;;; Bit manipulations
@@ -75,7 +73,6 @@
                 i)
     (- b)
     b))
-
 
 
 
@@ -97,8 +94,6 @@
                    shift-left)))
 
 
-
-
 ;;;;;;;;;; Handling parameters
 
 
@@ -106,97 +101,94 @@
 
   ;; Bit flags for the configuration byte.
 
-  {::channel     {1 0x00
-                  2 0x20
-                  3 0x40
-                  4 0x60}
-   ::converting? {true  0x80
-                  false 0x00}
-   ::mode        {:continuous 0x10
-                  :one-shot   0x00}
-   ::pga         {:x1 0x00
-                  :x2 0x01
-                  :x4 0x02
-                  :x8 0x03}
-   ::resolution  {:12-bits 0x00
-                  :14-bits 0x04
-                  :16-bits 0x08
-                  :18-bits 0x0c}})
+  {:mcp342x/channel     {1 0x00
+                         2 0x20
+                         3 0x40
+                         4 0x60}
+   :mcp342x/converting? {true  0x80
+                         false 0x00}
+   :mcp342x/mode        {:continuous 0x10
+                        :one-shot   0x00}
+   :mcp342x/pga         {:x1 0x00
+                         :x2 0x01
+                         :x4 0x02
+                         :x8 0x03}
+   :mcp342x/resolution  {:12-bits 0x00
+                         :14-bits 0x04
+                         :16-bits 0x08
+                         :18-bits 0x0c}})
 
 
 
 
-(defn- -parameters->byte
+(defn- -param+->byte
 
   ;; Given a map of parameters, returns a configuration byte.
   
-  [parameters]
+  [param+]
 
-  (reduce (fn add-flag [b parameter]
-            (let [value (or (get parameters
-                                 parameter)
-                            (get defaults
-                                 defaults))]
+  (reduce (fn add-flag [b param]
+            (let [value (or (get param+
+                                 param)
+                            (get default+
+                                 param))]
               (bit-or b
                       (or (get-in -flags
-                                  [parameter value])
+                                  [param value])
                           (throw (IllegalArgumentException. (format "Required configuration is invalid : %s %s"
-                                                                    parameter
+                                                                    param
                                                                     value)))))))
           0
-          [::channel
-           ::converting?
-           ::mode
-           ::pga
-           ::resultion]))
+          [:mcp342x/channel
+           :mcp342x/converting?
+           :mcp342x/mode
+           :mcp342x/pga
+           :mcp342x/resultion]))
 
 
 
-
-(defn- -byte->parameters
+(defn- -byte->param+
 
   ;; Converts a configuration byte into a map of parameters.
 
   [b]
 
-  {::channel     (if (bit-test b
-                               5)
-                   (if (bit-test b
-                                 6)
-                     4
-                     2)
-                   (if (bit-test b
-                                 6)
-                     3
-                     1))
-   ::converting? (bit-test b
-                           7)
-   ::mode        (if (bit-test b
-                               4)
-                  :continuous
-                  :one-shot)
-   ::pga         (if (bit-test b
-                               0)
-                   (if (bit-test b
-                                 1)
-                     :x8
-                     :x2)
-                   (if (bit-test b
-                                 1)
-                     :x4
-                     :x1))
-   ::resolution  (if (bit-test b
-                               2)
-                   (if (bit-test b
-                                 3)
-                     :18-bit
-                     :14-bit)
-                   (if (bit-test b
-                                 3)
-                     :16-bit
-                     :12-bit))})
-
-
+  {:mcp342x/channel     (if (bit-test b
+                                      5)
+                          (if (bit-test b
+                                        6)
+                            4
+                            2)
+                          (if (bit-test b
+                                        6)
+                            3
+                            1))
+   :mcp342x/converting? (bit-test b
+                                  7)
+   :mcp342x/mode        (if (bit-test b
+                                      4)
+                         :continuous
+                         :one-shot)
+   :mcp342x/pga         (if (bit-test b
+                                      0)
+                          (if (bit-test b
+                                        1)
+                            :x8
+                            :x2)
+                          (if (bit-test b
+                                        1)
+                            :x4
+                            :x1))
+   :mcp342x/resolution  (if (bit-test b
+                                      2)
+                          (if (bit-test b
+                                        3)
+                            :18-bit
+                            :14-bit)
+                          (if (bit-test b
+                                        3)
+                            :16-bit
+                            :12-bit))})
 
 
 ;;;;;;;;;; Computing output codes and input voltages
@@ -219,15 +211,14 @@
 
 
 
-
 (defn- -output-code
 
   ;; Computes the output-code taking into account the resolution.
 
-  [parameters bs]
+  [param+ bs]
 
   (condp identical?
-         (::resolution parameters)
+         (:mcp342x/resolution param+)
     :12-bit (-compute-output-code bs
                                   11
                                   0x0f)
@@ -251,25 +242,24 @@
 
 
 
-
 (defn- -input-voltage
 
   ;; Given the resolution, the PGA and the output code, computes the input voltage."
 
   ^double
 
-  [parameters bs]
+  [param+ bs]
 
   (let [^double lsb         (condp identical?
-                                   (::resolution parameters)
+                                   (:mcp342x/resolution param+)
                               :12-bits 1000
                               :14-bits  250
                               :16-bits   62.5
                               :18-bits   15.625)
-                output-code (-output-code parameters
+                output-code (-output-code param+
                                           bs)
         ^long   pga         (condp identical?
-                                   (::pga parameters)
+                                   (:mcp342x/pga param+)
                               :x1 1
                               :x2 2
                               :x4 4
@@ -279,16 +269,14 @@
                pga))))
 
 
-
-
 ;;;;;;;;;; API
 
 
 (defn address
 
-  "Gets the address of a slave device.
+  "Returns the address of a slave device.
   
-   The user can use pins `a0`, `a1` and `a2` to modify the default address by specifying a boolean value for each."
+   Pins `a0`, `a1` and `a2` are used to modify the default address by specifying a boolean value for each."
 
   ([]
 
@@ -310,7 +298,6 @@
 
 
 
-
 (defn configure
 
   "Configures the slave device by providing parameters.
@@ -319,45 +306,42 @@
   
    In absence of a parameter, a default value will be used.
   
-   Cf. `defaults`"
+   See [[default+]]."
 
-  [bus parameters]
+  [bus param+]
 
   (i2c/write bus
-             [(-parameters->byte parameters)])
+             [(-param+->byte param+)])
   nil)
-
 
 
 
 (defn read-channel
 
   "Reads a channel and returns a map containing the parameters under which the measure has been done as well as the
-   current input voltage under ::micro-volt."
+   current input voltage under :mcp342x/micro-volt."
 
   ([bus]
 
    (read-channel bus
-                 (get defaults
-                      ::resolution)))
+                 (get default+
+                      :mcp342x/resolution)))
 
 
   ([bus resolution]
 
-   (let [result     (i2c/read bus
-                              (condp identical?
-                                     resolution
-                                     :12-bit 3
-                                     :14-bit 3
-                                     :16-bit 3
-                                     :18-bit 4))
-         parameters (-byte->parameters (last result))]
-     (assoc parameters
-            ::micro-volt
-            (-input-voltage parameters
+   (let [result (i2c/read bus
+                          (condp identical?
+                                 resolution
+                                 :12-bit 3
+                                 :14-bit 3
+                                 :16-bit 3
+                                 :18-bit 4))
+         param+ (-byte->param+ (last result))]
+     (assoc param+
+            :mcp342x/micro-volt
+            (-input-voltage param+
                             result)))))
-
-
 
 
 ;;;;;;;;;;
