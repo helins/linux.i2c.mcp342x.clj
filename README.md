@@ -1,4 +1,4 @@
-# Linux.I2C.MCP342X
+# Linux.I2C.MCP342X, driver for A/D
 
 [![Clojars
 Project](https://img.shields.io/clojars/v/io.helins/linux.i2c.mcp342x.svg)](https://clojars.org/io.helins/linux.i2c.mcp342x)
