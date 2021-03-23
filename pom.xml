@@ -5,7 +5,7 @@
   <artifactId>linux.i2c.mcp342x</artifactId>
   <version>2.0.0-beta0</version>
   <name>Linux.I2C.MCP342x</name>
-  <description>Talking to the MCP342x family of ADC via I2C on Clojure JVM</description>
+  <description>Talking to the MCP342x family of ADC via I2C from Clojure JVM</description>
   <url>https://github.com/helins/linux.i2c.mcp342x.clj</url>
   <licenses>
     <license>
@@ -46,7 +46,7 @@
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>clojure</artifactId>
-      <version>1.10.2</version>
+      <version>1.10.1</version>
     </dependency>
     <dependency>
       <groupId>io.helins</groupId>
