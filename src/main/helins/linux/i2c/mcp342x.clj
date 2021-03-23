@@ -1,4 +1,10 @@
-(ns dvlopt.linux.i2c.mcp342x
+;; This Source Code Form is subject to the terms of the Mozilla Public
+;; License, v. 2.0. If a copy of the MPL was not distributed with this
+;; file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+
+
+(ns helins.linux.i2c.mcp342x
 
   "Library for talking to MCP342x converters using I2C.
   
@@ -31,14 +37,11 @@
 
    IO operations will throw in case of failure and are performed using this library :
   
-     https://github.com/dvlopt/linux.i2c.clj"
+     https://github.com/helins/linux.i2c.clj"
 
   {:author "Adam Helinski"}
 
-  (:require [dvlopt.linux.i2c :as i2c]
-            [dvlopt.void      :as void]))
-
-
+  (:require [helins.linux.i2c :as i2c]))
 
 
 ;;;;;;;;;; Misc
@@ -130,9 +133,10 @@
   [parameters]
 
   (reduce (fn add-flag [b parameter]
-            (let [value (void/obtain parameter
-                                     parameters
-                                     defaults)]
+            (let [value (or (get parameters
+                                 parameter)
+                            (get defaults
+                                 defaults))]
               (bit-or b
                       (or (get-in -flags
                                   [parameter value])
