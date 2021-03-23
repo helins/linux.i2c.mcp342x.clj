@@ -1,7 +1,9 @@
-# linux.i2c.mcp342x
+# Linux.I2C.MCP342X
 
 [![Clojars
-Project](https://img.shields.io/clojars/v/dvlopt/linux.i2c.mcp342x.svg)](https://clojars.org/dvlopt/linux.i2c.mcp342x)
+Project](https://img.shields.io/clojars/v/io.helins/linux.i2c.mcp342x.svg)](https://clojars.org/io.helins/linux.i2c.mcp342x)
+
+[![Cljdoc](https://cljdoc.org/badge/io.helins/linux.i2c.mcp342x)](https://cljdoc.org/d/io.helins/linux.i2c.mcp342x)
 
 Clojure library for talking to the MCP342x family of A/D converters using
 [I2C](https://en.wikipedia.org/wiki/I%C2%B2C) :
@@ -15,48 +17,48 @@ Clojure library for talking to the MCP342x family of A/D converters using
 - MCP3427
 - MCP3428
 
-Relies on [dvlopt/linux.i2c](https://github.com/dvlopt/linux.i2c.clj).
+Relies on [helins/linux.i2c](https://github.com/helins/linux.i2c.clj).
+
 
 ## Usage
 
-Read the
-[API](https://dvlopt.github.io/doc/clojure/dvlopt/linux.i2c.mcp342x/index.html).
+This is an overview.
 
-In short, without erorr handling :
+The [detailed API is available on Cljdoc](https://cljdoc.org/d/io.helins/linux.i2c.mcp342x).
+
+In short, without error handling :
 
 ```clj
-(require '[dvlopt.linux.i2c         :as i2c]
-         '[dvlopt.linux.i2c.mcp342x :as adc])
+(require '[helins.linux.i2c         :as i2c]
+         '[helins.linux.i2c.mcp342x :as mcp342x])
 
 
-(with-open [^java.lang.AutoCloseable bus (i2c/bus "/dev/i2c-1")]
+(with-open [bus (i2c/bus "/dev/i2c-1")]
 
   (i2c/select-slave bus
-                    (adc/address true
-                                 false
-                                 true))
+                    (mcp342x/address true
+                                     false
+                                     true))
 
-  (adc/configure bus
-                 {::adc/channel    2
-                  ::adc/mode       :continuous
-                  ::adc/pga        :x1
-                  ::adc/resolution :16-bit})
+  (mcp342x/configure bus
+                     {:mcp342x/channel    2
+                      :mcp342x/mode       :continuous
+                      :mcp342x/pga        :x1
+                      :mcp342x/resolution :16-bit})
 
-  (adc/read-channel bus
-                    :16-bit)
+  (mcp342x/read-channel bus
+                        :16-bit)
 
-  => {::adc/channel    2
-      ::adc/micro-volt 913000
-      ::adc/mode       :continuous
-      ::adc/pga        :x1
-      ::adc/resolution :16-bit}
-
-  )
+  => {:mcp342x/channel    2
+      :mcp342x/micro-volt 913000
+      :mcp342x/mode       :continuous
+      :mcp342x/pga        :x1
+      :mcp342x/resolution :16-bit})
 ```
+
 
 ## License
 
 Copyright © 2017 Adam Helinski
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Licensed under the term of the Mozilla Public License 2.0, see LICENSE.
